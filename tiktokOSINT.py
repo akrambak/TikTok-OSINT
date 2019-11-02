@@ -28,8 +28,8 @@ class TikTokOSINT:
 			self.username = f'@{username}'
 		
 		self.create_dir()
-		# Scrapes the profile and creates the data object
-		self.data = self.scrape_profile()
+		# Scrapes the profile and creates the data and posts objects
+		self.data, self.posts = self.scrape_profile()
 		# Save the data into the text file in the dir
 		self.save_data()
 		self.print_data()
@@ -45,17 +45,26 @@ class TikTokOSINT:
 		r = requests.get(f'http://tiktok.com/{self.username}', headers={'User-Agent':random.choice(user_agents)})
 		soup = BeautifulSoup(r.text,'html.parser')
 		attrs = soup.find_all('meta')
+		meta1 = soup.find_all('script')
 		try:
 			content1 = attrs[4].get('content').split('.')
-			data = {"username":self.username,
+			meta1 = json.loads(meta1[8].get_text()[24:])
+			profiledata = {"username":self.username,
 			'followers':content1[4],
 			'following':content1[5],
 			'bio':content1[6],
-			'profilepictureurl':attrs[13].get('content')}
-		except:
+			'profilepictureurl':attrs[13].get('content'),
+			'isVerified':meta1['/@:uniqueId']['userData']['verified'],
+			'fans':meta1['/@:uniqueId']['userData']['fans'],
+			'videos':meta1['/@:uniqueId']['userData']['video'],
+			'userID':meta1['/@:uniqueId']['userData']['userId'],
+			'nickname':meta1['/@:uniqueId']['userData']['nickName'],
+			'likes':meta1['/@:uniqueId']['userData']['heart']}
+			posts = meta1['/@:uniqueId']['itemList']
+		except IndexError:
 			print("Error: Profile Does not exist!")
 			sys.exit()
-		return data
+		return profiledata, posts
 
 	def download_profile_picture(self):
 		"""Downloads the profile picture
@@ -74,6 +83,9 @@ class TikTokOSINT:
 		"""
 		with open(f'{self.username}_profile_data.json','w') as f:
 			f.write(json.dumps(self.data))
+		with open(f'{self.username}_post_data.json', 'w') as f:
+			f.write(json.dumps(self.posts))
+		print(f"Profile and Post data saved to {os.getcwd()}")
 
 
 	def create_dir(self):

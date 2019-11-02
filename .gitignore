@@ -11,6 +11,7 @@ __pycache__/
 
 #TikTok Profile Data
 @*
+*.json
 
 # Distribution / packaging
 .Python
