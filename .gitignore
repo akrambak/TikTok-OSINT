@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+#Mac stuff
+.DS_Store
+
+#TikTok Profile Data
+@*
+
 # Distribution / packaging
 .Python
 build/

@@ -1,0 +1,15 @@
+research
+
+
+
+
+http://tiktok.com/@usernamehere
+
+# Important lines here
+
+
+soup.find_all('meta')[4].get('content')
+
+
+#profile pic
+soup.find_all('meta')[13].get('content')
