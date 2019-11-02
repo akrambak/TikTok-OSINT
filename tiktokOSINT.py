@@ -12,6 +12,7 @@ import os
 import random
 import requests
 
+from banner import banner
 from bs4 import BeautifulSoup
 from useragents import *
 
@@ -43,12 +44,20 @@ class TikTokOSINT:
 		r = requests.get(f'http://tiktok.com/{self.username}', headers={'User-Agent':random.choice(user_agents)})
 		soup = BeautifulSoup(r.text,'html.parser')
 		attrs = soup.find_all('meta')
-		content1 = attrs[4].get('content').split('.')
-		data = {"username":self.username,
-		'followers':content1[4],
-		'following':content1[5],
-		'bio':content1[6],
-		'profilepictureurl':attrs[13].get('content')}
+		try:
+			content1 = attrs[4].get('content').split('.')
+			data = {"username":self.username,
+			'followers':content1[4],
+			'following':content1[5],
+			'bio':content1[6],
+			'profilepictureurl':attrs[13].get('content')}
+		except:
+			print("Error: Profile Does not exist!")
+			data = {"username":self.username,
+			'followers':'None',
+			'following':'None',
+			'bio':'None',
+			'profilepictureurl':'None'}
 		return data
 
 	def download_profile_picture(self):
@@ -56,9 +65,13 @@ class TikTokOSINT:
 		:params: none
 		:return: none
 		"""
-		r = requests.get(self.data['profilepictureurl'])
-		with open(f"{self.username}.jpg","wb") as f:
-			f.write(r.content)
+		# If the profile was not found, this prevents more errors
+		if (self.data['profilepictureurl'] == 'None'):
+			pass
+		else:
+			r = requests.get(self.data['profilepictureurl'])
+			with open(f"{self.username}.jpg","wb") as f:
+				f.write(r.content)
 
 	def save_data(self):
 		"""
@@ -103,6 +116,7 @@ def arg_parse():
 	return parser.parse_args()
 
 def main():
+	print(banner)
 	args = arg_parse()
 	if args.downloadProfilePic == True:
 		tiktok = TikTokOSINT(args.username[0])
