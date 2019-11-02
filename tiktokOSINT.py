@@ -11,6 +11,7 @@ import json
 import os
 import random
 import requests
+import sys
 
 from banner import banner
 from bs4 import BeautifulSoup
@@ -53,11 +54,7 @@ class TikTokOSINT:
 			'profilepictureurl':attrs[13].get('content')}
 		except:
 			print("Error: Profile Does not exist!")
-			data = {"username":self.username,
-			'followers':'None',
-			'following':'None',
-			'bio':'None',
-			'profilepictureurl':'None'}
+			sys.exit()
 		return data
 
 	def download_profile_picture(self):
@@ -65,13 +62,9 @@ class TikTokOSINT:
 		:params: none
 		:return: none
 		"""
-		# If the profile was not found, this prevents more errors
-		if (self.data['profilepictureurl'] == 'None'):
-			pass
-		else:
-			r = requests.get(self.data['profilepictureurl'])
-			with open(f"{self.username}.jpg","wb") as f:
-				f.write(r.content)
+		r = requests.get(self.data['profilepictureurl'])
+		with open(f"{self.username}.jpg","wb") as f:
+			f.write(r.content)
 
 	def save_data(self):
 		"""
