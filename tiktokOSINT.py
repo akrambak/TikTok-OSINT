@@ -127,7 +127,7 @@ def main():
 		tiktok = TikTokOSINT(args.username[0])
 		tiktok.download_profile_picture()
 	else:
-		tiktok = TikTokOSINT(args.username)
+		tiktok = TikTokOSINT(args.username[0])
 
 
 if __name__ == "__main__":
