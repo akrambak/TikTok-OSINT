@@ -47,9 +47,9 @@ class TikTokOSINT:
 		content = soup.find_all("script", attrs={"type":"application/json", "crossorigin":"anonymous"})
 		content = json.loads(content[0].contents[0])
 		profile_data = {"UserID":content["props"]["pageProps"]["userData"]["userId"],
-			"UniqueID":content["props"]["pageProps"]["userData"]["uniqueId"],
+			"username":content["props"]["pageProps"]["userData"]["uniqueId"],
 			"nickName":content["props"]["pageProps"]["userData"]["nickName"],
-			"signature":content["props"]["pageProps"]["userData"]["signature"],
+			"bio":content["props"]["pageProps"]["userData"]["signature"],
 			"profileImage":content["props"]["pageProps"]["userData"]["coversMedium"][0],
 			"following":content["props"]["pageProps"]["userData"]["following"],
 			"fans":content["props"]["pageProps"]["userData"]["fans"],
