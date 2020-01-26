@@ -9,8 +9,7 @@ TikTok Social Media Open Source Intellegence Tool
 
 ## Demo
 
-![alt text](https://github.com/sc1341/TikTokOSINT/assets/file.gif "Demo")
-
+![image](https://github.com/sc1341/TikTokOSINT/assets/file.gif)
 
 ## Data
 
