@@ -29,7 +29,7 @@ class TikTokOSINT:
 		
 		self.create_dir()
 		# Scrapes the profile and creates the data and posts objects
-		self.data, self.posts = self.scrape_profile()
+		self.data = self.scrape_profile()
 		# Save the data into the text file in the dir
 		self.save_data()
 		self.print_data()
@@ -43,41 +43,28 @@ class TikTokOSINT:
 		:return:none
 		"""
 		r = requests.get(f'http://tiktok.com/{self.username}', headers={'User-Agent':random.choice(user_agents)})
-		soup = BeautifulSoup(r.text,'html.parser')
-		attrs = soup.find_all('meta')
-		meta1 = soup.find_all('script')
-		attrs = soup.find_all('meta')
-		try:
-			# content1 = attrs[27].get('content').split(',')
-			# We know that it is 13 we are looking for... Now we need to figure out why it won't load
-			#print(meta1[12].get_text())
-			# Need to clean up what is going on with the splicing of content -- figured out hte main issue
-			content1 = attrs[4].get('content').split('.')
-			meta1 = json.loads(meta1[13].get_text())
-			print(meta1)
-			profiledata = {"username":self.username,
-			'followers':content1[0],
-			'following':content1[1],
-			'bio':content1[6],
-			'profilepictureurl':attrs[13].get('content'),
-			'isVerified':meta1['/@:uniqueId']['userData']['verified'],
-			'fans':meta1['/@:uniqueId']['userData']['fans'],
-			'videos':meta1['/@:uniqueId']['userData']['video'],
-			'userID':meta1['/@:uniqueId']['userData']['userId'],
-			'nickname':meta1['/@:uniqueId']['userData']['nickName'],
-			'likes':meta1['/@:uniqueId']['userData']['heart']}
-			posts = meta1['/@:uniqueId']['itemList']
-		except IndexError:
-			print("Error: Profile Does not exist!")
-			sys.exit()
-		return profiledata, posts
+		soup = BeautifulSoup(r.text, "html.parser")
+		content = soup.find_all("script", attrs={"type":"application/json", "crossorigin":"anonymous"})
+		content = json.loads(content[0].contents[0])
+		profile_data = {"UserID":content["props"]["pageProps"]["userData"]["userId"],
+			"UniqueID":content["props"]["pageProps"]["userData"]["uniqueId"],
+			"nickName":content["props"]["pageProps"]["userData"]["nickName"],
+			"signature":content["props"]["pageProps"]["userData"]["signature"],
+			"profileImage":content["props"]["pageProps"]["userData"]["coversMedium"][0],
+			"following":content["props"]["pageProps"]["userData"]["following"],
+			"fans":content["props"]["pageProps"]["userData"]["fans"],
+			"hearts":content["props"]["pageProps"]["userData"]["heart"],
+			"videos":content["props"]["pageProps"]["userData"]["video"],
+			"verified":content["props"]["pageProps"]["userData"]["verified"]}
+
+		return profile_data
 
 	def download_profile_picture(self):
 		"""Downloads the profile picture
 		:params: none
 		:return: none
 		"""
-		r = requests.get(self.data['profilepictureurl'])
+		r = requests.get(self.data['profileImage'])
 		with open(f"{self.username}.jpg","wb") as f:
 			f.write(r.content)
 
@@ -89,9 +76,9 @@ class TikTokOSINT:
 		"""
 		with open(f'{self.username}_profile_data.json','w') as f:
 			f.write(json.dumps(self.data))
-		with open(f'{self.username}_post_data.json', 'w') as f:
-			f.write(json.dumps(self.posts))
-		print(f"Profile and Post data saved to {os.getcwd()}")
+		#with open(f'{self.username}_post_data.json', 'w') as f:
+			#f.write(json.dumps(self.posts))
+		print(f"Profile data saved to {os.getcwd()}")
 
 
 	def create_dir(self):
