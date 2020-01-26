@@ -7,8 +7,14 @@ TikTok Social Media Open Source Intellegence Tool
 
 ```python3 tiktokOSINT.py --username USERNAMEHERE --downloadProfilePic```
 
+## Demo
+
+![alt text](https://github.com/sc1341/TikTokOSINT/assets/file.gif "Demo")
+
 
 ## Data
+
+TikTok OSINT gives the user lots of meta-data about the user...
 
 1. Profile Name
 2. Profile Image
