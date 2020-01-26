@@ -7,9 +7,6 @@ TikTok Social Media Open Source Intellegence Tool
 
 ```python3 tiktokOSINT.py --username USERNAMEHERE --downloadProfilePic```
 
-## Demo
-
-<img src="https://github.com/sc1341/TikTokOSINT/assets/file.gif"/>
 
 ## Data
 
