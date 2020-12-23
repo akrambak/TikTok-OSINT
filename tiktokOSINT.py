@@ -42,20 +42,28 @@ class TikTokOSINT:
 		:params: none
 		:return:none
 		"""
-		r = requests.get(f'http://tiktok.com/{self.username}', headers={'User-Agent':random.choice(user_agents)})
+		r = requests.get(f'https://tiktok.com/{self.username}', headers={'User-Agent':random.choice(user_agents)})
 		soup = BeautifulSoup(r.text, "html.parser")
+
 		content = soup.find_all("script", attrs={"type":"application/json", "crossorigin":"anonymous"})
+
 		content = json.loads(content[0].contents[0])
-		profile_data = {"UserID":content["props"]["pageProps"]["userData"]["userId"],
-			"username":content["props"]["pageProps"]["userData"]["uniqueId"],
-			"nickName":content["props"]["pageProps"]["userData"]["nickName"],
-			"bio":content["props"]["pageProps"]["userData"]["signature"],
-			"profileImage":content["props"]["pageProps"]["userData"]["coversMedium"][0],
-			"following":content["props"]["pageProps"]["userData"]["following"],
-			"fans":content["props"]["pageProps"]["userData"]["fans"],
-			"hearts":content["props"]["pageProps"]["userData"]["heart"],
-			"videos":content["props"]["pageProps"]["userData"]["video"],
-			"verified":content["props"]["pageProps"]["userData"]["verified"]}
+
+		print(content["props"]["pageProps"])
+
+		profile_data = {
+			"UserID":content["props"]["pageProps"]["userInfo"]["user"]["id"],
+			"username":content["props"]["pageProps"]["userInfo"]["user"]["uniqueId"],
+			"nickName":content["props"]["pageProps"]["userInfo"]["user"]["nickname"],
+			"bio":content["props"]["pageProps"]["userInfo"]["user"]["signature"],
+			"profileImage":content["props"]["pageProps"]["userInfo"]["user"]["avatarLarger"],
+			"following":content["props"]["pageProps"]["userInfo"]["stats"]["followingCount"],
+			"followers":content["props"]["pageProps"]["userInfo"]["stats"]["followerCount"],
+			"fans":content["props"]["pageProps"]["userInfo"]["stats"]["followerCount"],
+			"hearts":content["props"]["pageProps"]["userInfo"]["stats"]["heart"],
+			"videos":content["props"]["pageProps"]["userInfo"]["stats"]["videoCount"],
+			"verified":content["props"]["pageProps"]["userInfo"]["user"]["verified"]
+			}
 
 		return profile_data
 
@@ -91,8 +99,8 @@ class TikTokOSINT:
 		i = 0
 		while True:
 			try:
-				os.mkdir(self.username + str(i))
-				os.chdir(self.username + str(i))
+				os.mkdir(self.username)
+				os.chdir(self.username)
 				break
 			except FileExistsError:
 				i += 1
