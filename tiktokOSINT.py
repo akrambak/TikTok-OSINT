@@ -23,9 +23,9 @@ class TikTokOSINT:
 	def __init__(self, username):
 		# Make sure that the usernames starts with @ for the http request
 		if username.startswith('@qtr.aa'):
-			self.username = username
+			self.username = @qtraa
 		else:
-			self.username = f'@{username}'
+			self.username = f'@{qtr.aa}'
 		
 		self.create_dir()
 		# Scrapes the profile and creates the data and posts objects
