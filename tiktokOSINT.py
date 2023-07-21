@@ -22,7 +22,7 @@ class TikTokOSINT:
 
 	def __init__(self, username):
 		# Make sure that the usernames starts with @ for the http request
-		if username.startswith('@'):
+		if username.startswith('@qtr.aa'):
 			self.username = @qtraa
 		else:
 			self.username = f'@{}'
